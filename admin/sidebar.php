@@ -38,9 +38,9 @@
       <h6 class="collapse-header">Custom Masters:</h6>
       <a class="collapse-item" href="add-branch.php">Add Branch</a>
       <a class="collapse-item" href="add-user.php">Add User</a>
-      <a class="collapse-item" href="#">Add Customer</a>
-      <a class="collapse-item" href="#">Add Supplier</a>
-      <a class="collapse-item" href="#">Price Setting</a>
+      <a class="collapse-item" href="add-customer.php">Add Customer</a>
+      <a class="collapse-item" href="add-supplier.php">Add Supplier</a>
+      <a class="collapse-item" href="price-set.php">Price Setting</a>
       
     </div>
   </div>

@@ -9,13 +9,15 @@ if(isset($_POST["submit"])){
   $name = $_POST['fullname'];
   $mobile = $_POST['mobile'];
   $email = $_POST['email'];
-  $role = $_POST['role'];
+  $gst = $_POST['gst'];
+  $bank = $_POST['bank'];
+  $address = $_POST['address'];
 
-  $insert_users_query = mysql_query("INSERT INTO users (name,username,password,email,mobile,role,status)
-                                    values('".$name."','".$email."','pass1234','".$email."','".$mobile."','".$role."','Active')") or die(mysqli_error());
+  $insert_customers_query = mysql_query("INSERT INTO customer (name,mobile,email,gst,address,bank_details,status)
+                                    values('".$name."','".$mobile."','$email','".$gst."','".$bank."','".$address."','Active')") or die(mysqli_error());
 
-  if($insert_users_query){
-    $msg = "Successfully user added !";
+  if($insert_customers_query){
+    $msg = "Successfully customer added !";
   }else{
     $msg = "Please try again !!";
   }
@@ -143,7 +145,7 @@ if(isset($_POST["submit"])){
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Add User</h1>
+            <h1 class="h3 mb-0 text-gray-800">Add Customer</h1>
             <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> -->
           </div>
          
@@ -153,20 +155,22 @@ if(isset($_POST["submit"])){
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Adding User Details</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Adding Customer Details</h6>
                   
                 </div>
                 <!-- Card Body -->
-                <div class="card-body">
+                <div class="card-body" style="height:615px;">
                   <div class="chart-area">
                   <div class="p-12">
+                  
+                    <label for="msg"class="red"><?php echo $msg; ?></label>
                   <form class="user" action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
                   <div class="row">
                     <div class="col-md-4 form-group">
                       <label for="fullname">Full Name</label>
                     </div>
                     <div class="col-md-8 form-group">
-                      <input type="text" class="form-control" name="fullname" aria-describedby="fullnameHelp" required>
+                      <input type="text" class="form-control" name="fullname"required>
                     </div>
                   </div>
                   <div class="row">
@@ -174,7 +178,7 @@ if(isset($_POST["submit"])){
                       <label for="mobile">Mobile No</label>
                     </div>
                     <div class="col-md-8 form-group">
-                      <input type="number" class="form-control" name="mobile" aria-describedby="fullnameHelp" required>
+                      <input type="number" class="form-control" name="mobile" required>
                     </div>
                   </div>
                   <div class="row">
@@ -182,26 +186,36 @@ if(isset($_POST["submit"])){
                       <label for="email">Email Id</label>
                     </div>
                     <div class="col-md-8 form-group">
-                      <input type="email" class="form-control" name="email" aria-describedby="fullnameHelp" required>
+                      <input type="email" class="form-control" name="email">
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-4 form-group">
-                      <label for="email">Role</label>
+                      <label for="email">GST No</label>
                     </div>
                     <div class="col-md-8 form-group">
-                        <select name="role" name="role" class="form-control" required>
-                            <option value="">--Select--</option>
-                            <option value="admin">Admin</option>
-                            <option value="sales">Sales</option>
-                            <option value="other">Other</option>
-                        </select>
+                      <input type="text" class="form-control" name="gst">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 form-group">
+                      <label for="email">Bank Details</label>
+                    </div>
+                    <div class="col-md-8 form-group">
+                      <textarea class="form-control" name="bank" id="" cols="45" rows="5"></textarea>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 form-group">
+                      <label for="email">Address</label>
+                    </div>
+                    <div class="col-md-8 form-group">
+                      <textarea class="form-control" name="address" id="" cols="45" rows="5"></textarea>
                     </div>
                   </div>
                   <div class="col-md-12 form-group center">
-                   <input type="submit" class="btn btn-primary" value="Add User" name="submit" />
-                    <br>
-                    <label for="msg"class="red"><?php echo $msg; ?></label>
+                   <input type="submit" class="btn btn-primary" value="Add Customer" name="submit" />
+                    
                   </div> 
                     
                   </form>
@@ -214,30 +228,28 @@ if(isset($_POST["submit"])){
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">User Details</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Customer Details</h6>
                 </div>
                 <!-- Card Body -->
-                <div class="card-body">
+                <div class="card-body" style="height:615px;">
                   <div class="chart-pie">
                     <div class="row">
                     
-                      <div class="col-md-3" style="color:#ef1c08;font-weight:bold;">FULLNAME</div>
-                      <div class="col-md-5" style="color:#ef1c08;font-weight:bold;">USERNAME</div>
-                      <div class="col-md-2" style="color:#ef1c08;font-weight:bold;">ROLE</div>
+                      <div class="col-md-7" style="color:#ef1c08;font-weight:bold;">CUSTOMER NAME</div>
+                      <div class="col-md-3" style="color:#ef1c08;font-weight:bold;">MOBILE NO</div>
                       <div class="col-md-2" style="color:#ef1c08;font-weight:bold;">STATUS</div>
                     </div>
                     <?php
-                      $all_users_query = mysql_query("SELECT * FROM users") or die(mysqli_error());
+                      $all_customers_query = mysql_query("SELECT * FROM customer") or die(mysqli_error());
 
-                      if (mysql_num_rows($all_users_query) > 0) {
+                      if (mysql_num_rows($all_customers_query) > 0) {
                         $i=0;
-                        while($row = mysql_fetch_array($all_users_query)) {
+                        while($row = mysql_fetch_array($all_customers_query)) {
                           ?>
                           <div class="row">
                             
-                            <div class="col-md-3"><?php echo $row['name']; ?></div>
-                            <div class="col-md-5"><?php echo $row['username']; ?></div>
-                            <div class="col-md-2"><?php echo $row['role']; ?></div>
+                            <div class="col-md-7"><?php echo $row['name']; ?></div>
+                            <div class="col-md-3"><?php echo $row['mobile']; ?></div>
                             <div class="col-md-2"><?php echo $row['status']; ?></div>
                           </div>
                           <?php
@@ -245,11 +257,11 @@ if(isset($_POST["submit"])){
                         }
                       }
                       else{
-                          echo "No users added !!";
+                          echo "No customers added !!";
                       }
                     ?>
                   </div>
-                  <div class="mt-4 text-center small">
+                  <!-- <div class="mt-4 text-center small">
                     <span class="mr-2">
                       <i class="fas fa-circle text-primary"></i> Direct
                     </span>
@@ -259,7 +271,7 @@ if(isset($_POST["submit"])){
                     <span class="mr-2">
                       <i class="fas fa-circle text-info"></i> Referral
                     </span>
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>

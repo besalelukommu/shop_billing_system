@@ -6,16 +6,16 @@ include_once("../config/config.php");
 
 if(isset($_POST["submit"])){
   
-  $name = $_POST['fullname'];
-  $mobile = $_POST['mobile'];
-  $email = $_POST['email'];
-  $role = $_POST['role'];
+  $branchname = $_POST['branchname'];
+  $branchcenter = $_POST['branchcenter'];
+  $branchaddress = $_POST['branchaddress'];
+  
 
-  $insert_users_query = mysql_query("INSERT INTO users (name,username,password,email,mobile,role,status)
-                                    values('".$name."','".$email."','pass1234','".$email."','".$mobile."','".$role."','Active')") or die(mysqli_error());
+  $insert_branch_query = mysql_query("INSERT INTO branch (branch_name,branch_center,branch_address,status)
+                                    values('".$branchname."','".$branchcenter."','branchaddress','Active')") or die(mysqli_error());
 
-  if($insert_users_query){
-    $msg = "Successfully user added !";
+  if($insert_branch_query){
+    $msg = "Successfully branch added !";
   }else{
     $msg = "Please try again !!";
   }
@@ -143,7 +143,7 @@ if(isset($_POST["submit"])){
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Add User</h1>
+            <h1 class="h3 mb-0 text-gray-800">Add Branch</h1>
             <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> -->
           </div>
          
@@ -153,7 +153,7 @@ if(isset($_POST["submit"])){
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Adding User Details</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Adding Branch Details</h6>
                   
                 </div>
                 <!-- Card Body -->
@@ -163,43 +163,31 @@ if(isset($_POST["submit"])){
                   <form class="user" action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
                   <div class="row">
                     <div class="col-md-4 form-group">
-                      <label for="fullname">Full Name</label>
+                      <label>Branch Name</label>
                     </div>
                     <div class="col-md-8 form-group">
-                      <input type="text" class="form-control" name="fullname" aria-describedby="fullnameHelp" required>
+                      <input type="text" class="form-control" name="branchname" required>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-4 form-group">
-                      <label for="mobile">Mobile No</label>
+                      <label>Branch Center</label>
                     </div>
                     <div class="col-md-8 form-group">
-                      <input type="number" class="form-control" name="mobile" aria-describedby="fullnameHelp" required>
+                      <input type="text" class="form-control" name="branchcenter" required>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-4 form-group">
-                      <label for="email">Email Id</label>
+                      <label>Branch Address</label>
                     </div>
                     <div class="col-md-8 form-group">
-                      <input type="email" class="form-control" name="email" aria-describedby="fullnameHelp" required>
+                      <textarea class="form-control" name="branchaddress" id="" cols="45" rows="5"></textarea>
                     </div>
                   </div>
-                  <div class="row">
-                    <div class="col-md-4 form-group">
-                      <label for="email">Role</label>
-                    </div>
-                    <div class="col-md-8 form-group">
-                        <select name="role" name="role" class="form-control" required>
-                            <option value="">--Select--</option>
-                            <option value="admin">Admin</option>
-                            <option value="sales">Sales</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                  </div>
+                  
                   <div class="col-md-12 form-group center">
-                   <input type="submit" class="btn btn-primary" value="Add User" name="submit" />
+                   <input type="submit" class="btn btn-primary" value="Add Branch" name="submit" />
                     <br>
                     <label for="msg"class="red"><?php echo $msg; ?></label>
                   </div> 
@@ -214,30 +202,28 @@ if(isset($_POST["submit"])){
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">User Details</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Branch Details</h6>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
                   <div class="chart-pie">
                     <div class="row">
                     
-                      <div class="col-md-3" style="color:#ef1c08;font-weight:bold;">FULLNAME</div>
-                      <div class="col-md-5" style="color:#ef1c08;font-weight:bold;">USERNAME</div>
-                      <div class="col-md-2" style="color:#ef1c08;font-weight:bold;">ROLE</div>
+                      <div class="col-md-5" style="color:#ef1c08;font-weight:bold;">BRANCH NAME</div>
+                      <div class="col-md-5" style="color:#ef1c08;font-weight:bold;">BRANCH CENTER</div>
                       <div class="col-md-2" style="color:#ef1c08;font-weight:bold;">STATUS</div>
                     </div>
                     <?php
-                      $all_users_query = mysql_query("SELECT * FROM users") or die(mysqli_error());
+                      $all_branch_query = mysql_query("SELECT * FROM branch") or die(mysqli_error());
 
-                      if (mysql_num_rows($all_users_query) > 0) {
+                      if (mysql_num_rows($all_branch_query) > 0) {
                         $i=0;
-                        while($row = mysql_fetch_array($all_users_query)) {
+                        while($row = mysql_fetch_array($all_branch_query)) {
                           ?>
                           <div class="row">
                             
-                            <div class="col-md-3"><?php echo $row['name']; ?></div>
-                            <div class="col-md-5"><?php echo $row['username']; ?></div>
-                            <div class="col-md-2"><?php echo $row['role']; ?></div>
+                            <div class="col-md-5"><?php echo $row['branch_name']; ?></div>
+                            <div class="col-md-5"><?php echo $row['branch_center']; ?></div>
                             <div class="col-md-2"><?php echo $row['status']; ?></div>
                           </div>
                           <?php
@@ -245,7 +231,7 @@ if(isset($_POST["submit"])){
                         }
                       }
                       else{
-                          echo "No users added !!";
+                          echo "No branches added !!";
                       }
                     ?>
                   </div>
