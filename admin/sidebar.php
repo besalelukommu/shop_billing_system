@@ -62,9 +62,10 @@
   <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
     <div class="bg-white py-2 collapse-inner rounded">
       <h6 class="collapse-header">Custom Inventory:</h6>
-      <a class="collapse-item" href="#">Add Categories</a>
-      <a class="collapse-item" href="#">Add Product</a>
-      <a class="collapse-item" href="#">Stock Update</a>
+      <a class="collapse-item" href="add-categories.php">Add Categories</a>
+      <a class="collapse-item" href="add-product.php">Add Product</a>
+      <a class="collapse-item" href="add-stock.php">Add Stock</a>
+      <a class="collapse-item" href="stock-update.php">Stock Update</a>
       <a class="collapse-item" href="#">Stock Register</a>
       
     </div>

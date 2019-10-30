@@ -7,7 +7,7 @@ $dbusername='root';
 $dbpassword='';
 
 // name of database
-$dbname='billing';
+$dbname='sbs';
 
 ////////////////////////////////////////
 ////// DONOT EDIT BELOW  /////////

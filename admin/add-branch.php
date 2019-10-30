@@ -9,10 +9,11 @@ if(isset($_POST["submit"])){
   $branchname = $_POST['branchname'];
   $branchcenter = $_POST['branchcenter'];
   $branchaddress = $_POST['branchaddress'];
+  $branchid = $branchname;
   
 
-  $insert_branch_query = mysql_query("INSERT INTO branch (branch_name,branch_center,branch_address,status)
-                                    values('".$branchname."','".$branchcenter."','branchaddress','Active')") or die(mysqli_error());
+  $insert_branch_query = mysql_query("INSERT INTO branch (branch_name,branch_center,branch_address,branch_id,status)
+                                    values('".$branchname."','".$branchcenter."','".$branchaddress."','".$branchid."','Active')") or die(mysqli_error());
 
   if($insert_branch_query){
     $msg = "Successfully branch added !";

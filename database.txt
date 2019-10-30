@@ -1,7 +1,11 @@
 database
 	1-users
-	2-stock
-	3-customer
-	4-suppliers
-	5-price
-	6-sales
+	2-branch
+	3-categories
+	4-products
+	5-customer
+	6-price_set
+	7-stock
+	8-stock_details
+	9-sales_stock
+	10-sales
