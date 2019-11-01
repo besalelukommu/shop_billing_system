@@ -7,12 +7,18 @@ include_once("../config/config.php");
 if(isset($_POST["submit"])){
   
   $name = $_POST['fullname'];
+  $branch_id = $_POST['branch'];
   $mobile = $_POST['mobile'];
   $email = $_POST['email'];
   $role = $_POST['role'];
+  $rand = rand(100, 1000);
 
-  $insert_users_query = mysql_query("INSERT INTO users (name,username,password,email,mobile,role,status)
-                                    values('".$name."','".$email."','pass1234','".$email."','".$mobile."','".$role."','Active')") or die(mysqli_error());
+  $firstname = strtok($name, ' ');
+  $usr = trim($firstname);
+  $user_id = $usr.$rand;
+  
+  $insert_users_query = mysql_query("INSERT INTO users (branch_id,fullname,username,password,email,mobile,role,status)
+                                    values('".$branch_id."','".$name."','".$user_id."','pass1234','".$email."','".$mobile."','".$role."','Active')") or die(mysqli_error());
 
   if($insert_users_query){
     $msg = "Successfully user added !";
@@ -154,7 +160,7 @@ if(isset($_POST["submit"])){
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 class="m-0 font-weight-bold text-primary">Adding User Details</h6>
-                  
+                  <span class="red"><?php echo $msg; ?></span>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
@@ -163,18 +169,18 @@ if(isset($_POST["submit"])){
                   <form class="user" action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
                   <div class="row">
                     <div class="col-md-4 form-group">
-                      <label for="fullname">Full Name</label>
+                      <label for="fullname">Full Name<span class="require">*</span></label>
                     </div>
                     <div class="col-md-8 form-group">
-                      <input type="text" class="form-control" name="fullname" aria-describedby="fullnameHelp" required>
+                      <input type="text" class="form-control" name="fullname" required>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-4 form-group">
-                      <label for="mobile">Mobile No</label>
+                      <label for="mobile">Mobile No<span class="require">*</span></label>
                     </div>
                     <div class="col-md-8 form-group">
-                      <input type="number" class="form-control" name="mobile" aria-describedby="fullnameHelp" required>
+                      <input type="number" class="form-control" name="mobile" required>
                     </div>
                   </div>
                   <div class="row">
@@ -182,16 +188,40 @@ if(isset($_POST["submit"])){
                       <label for="email">Email Id</label>
                     </div>
                     <div class="col-md-8 form-group">
-                      <input type="email" class="form-control" name="email" aria-describedby="fullnameHelp" required>
+                      <input type="email" class="form-control" name="email" required>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-4 form-group">
-                      <label for="email">Role</label>
+                      <label for="branch">Branch<span class="require">*</span></label>
                     </div>
                     <div class="col-md-8 form-group">
-                        <select name="role" name="role" class="form-control" required>
-                            <option value="">--Select--</option>
+                        <select name="branch" class="form-control" required>
+                            <option value="">Select</option>
+                          <?php
+                          $branch_query = mysql_query("SELECT * FROM branch WHERE status = 'Active' ORDER BY branch_name")or die (mysql_error());
+                            if(mysql_num_rows($branch_query) > 0){
+                              $j = 0;
+                              while($row = mysql_fetch_array($branch_query)){
+                                ?>
+                                
+                                    <option value="<?php echo $row['branch_id']; ?>"><?php echo $row['branch_name']; ?></option>
+                                <?php
+                                  $j++;
+                              }
+                            }
+                          ?>
+                            
+                        </select>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 form-group">
+                      <label for="email">Role<span class="require">*</span></label>
+                    </div>
+                    <div class="col-md-8 form-group">
+                        <select name="role" class="form-control" required>
+                            <option value="">Select</option>
                             <option value="admin">Admin</option>
                             <option value="sales">Sales</option>
                             <option value="other">Other</option>
@@ -200,8 +230,7 @@ if(isset($_POST["submit"])){
                   </div>
                   <div class="col-md-12 form-group center">
                    <input type="submit" class="btn btn-primary" value="Add User" name="submit" />
-                    <br>
-                    <label for="msg"class="red"><?php echo $msg; ?></label>
+                    
                   </div> 
                     
                   </form>
@@ -215,30 +244,58 @@ if(isset($_POST["submit"])){
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 class="m-0 font-weight-bold text-primary">User Details</h6>
+                  <span id="autosavenotify" class="red"></span>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
                   <div class="chart-pie">
                     <div class="row">
                     
-                      <div class="col-md-3" style="color:#ef1c08;font-weight:bold;">FULLNAME</div>
-                      <div class="col-md-5" style="color:#ef1c08;font-weight:bold;">USERNAME</div>
+                      <div class="col-md-4" style="color:#ef1c08;font-weight:bold;">FULLNAME</div>
+                      <div class="col-md-3" style="color:#ef1c08;font-weight:bold;">BRANCH</div>
                       <div class="col-md-2" style="color:#ef1c08;font-weight:bold;">ROLE</div>
-                      <div class="col-md-2" style="color:#ef1c08;font-weight:bold;">STATUS</div>
+                      <div class="col-md-3" style="color:#ef1c08;font-weight:bold;">STATUS</div>
                     </div>
                     <?php
-                      $all_users_query = mysql_query("SELECT * FROM users") or die(mysqli_error());
+                      $all_users_query = mysql_query("SELECT * FROM users") or die(mysql_error());
 
                       if (mysql_num_rows($all_users_query) > 0) {
                         $i=0;
                         while($row = mysql_fetch_array($all_users_query)) {
                           ?>
                           <div class="row">
+                            <div class="myid col-md-1"><?php echo $row['user_id']; ?></div>
+                            <div class="col-md-3"><?php echo $row['fullname']; ?></div>
+                            <?php
+                            $br_id = $row['branch_id'];
+                            $branch_id = mysql_query("SELECT branch_name FROM branch WHERE branch_id = '$br_id'")or die(mysql_error());
+                            if(mysql_num_rows($branch_id) > 0){
+                              $jj = 0;
+                              while($row1 = mysql_fetch_array($branch_id)){
+                                ?>
+                                  <div class="col-md-3"><?php echo $row1['branch_name']; ?></div>
+                                <?php
+                                $jj++;
+                              }
+                            }
+                              
+                            ?>
                             
-                            <div class="col-md-3"><?php echo $row['name']; ?></div>
-                            <div class="col-md-5"><?php echo $row['username']; ?></div>
                             <div class="col-md-2"><?php echo $row['role']; ?></div>
-                            <div class="col-md-2"><?php echo $row['status']; ?></div>
+                            <div class="col-md-3">
+                                <select name="status"  class="status form-control">
+                                  <option value="<?php echo $row['status']; ?>"><?php echo $row['status']; ?></option>
+                                  <?php
+                                    if ($row['status'] == 'Active'){
+                                      ?>
+                                      <option value="Inactive">Inactive</option>
+                                      <?php
+                                    }else{
+                                  ?>
+                                  <option value="Active">Active</option>
+                                    <?php } ?>
+                                </select>
+                            </div>
                           </div>
                           <?php
                           $i++;
@@ -251,13 +308,13 @@ if(isset($_POST["submit"])){
                   </div>
                   <div class="mt-4 text-center small">
                     <span class="mr-2">
-                      <i class="fas fa-circle text-primary"></i> Direct
+                      <!-- <i class="fas fa-circle text-primary"></i> Direct -->
                     </span>
                     <span class="mr-2">
-                      <i class="fas fa-circle text-success"></i> Social
+                      <!-- <i class="fas fa-circle text-success"></i> Social -->
                     </span>
                     <span class="mr-2">
-                      <i class="fas fa-circle text-info"></i> Referral
+                      <!-- <i class="fas fa-circle text-info"></i> Referral -->
                     </span>
                   </div>
                 </div>
@@ -312,12 +369,30 @@ if(isset($_POST["submit"])){
   <!-- Custom scripts for all pages-->
   <script src="js/sb-admin-2.min.js"></script>
 
-  <!-- Page level plugins -->
+  <!-- Page level plugins --
   <script src="vendor/chart.js/Chart.min.js"></script>
 
-  <!-- Page level custom scripts -->
+  <!-- Page level custom scripts --
   <script src="js/demo/chart-area-demo.js"></script>
-  <script src="js/demo/chart-pie-demo.js"></script>
+  <script src="js/demo/chart-pie-demo.js"></script>-->
+  <script>
+  $(document).ready(function(){
+    $('select.status').on('change', function () {
+      var decision = $(this).val();
+      var id = $('div.myid').html();
+      alert('Status changed to '+decision);
+      $.ajax({
+        type: "POST",
+        url: "user-status.php",
+        data: {decision:decision, id:id},
+        success: function(msg){
+          $('#autosavenotify').text(msg);
+
+        }
+      })
+    });
+  });
+  </script>
 
 </body>
 

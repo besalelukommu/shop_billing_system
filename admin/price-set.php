@@ -7,11 +7,12 @@ include_once("../config/config.php");
 if(isset($_POST["submit"])){
   
   $price = $_POST['price'];
-  $category = $_POST['category'];
+  $product = $_POST['product'];
   $date = date('Y-m-d');
 
-  $insert_price_query = mysql_query("INSERT INTO price_set (price,category,weight,date)
-                                    values('".$price."','".$category."','1000','".$date."')") or die(mysqli_error());
+  
+  $insert_price_query = mysql_query("INSERT INTO price_set (price,product,weight,date)
+                                    values('".$price."','".$product."','1000','".$date."')") or die(mysql_error());
 
   if($insert_price_query){
     $msg = "Successfully price changed !";
@@ -153,43 +154,49 @@ if(isset($_POST["submit"])){
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 class="m-0 font-weight-bold text-primary">Price Change</h6>
-                  
+                  <span class="red"><?php echo $msg; ?></span>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
                   <div class="chart-area">
                   <div class="p-12">
                   <form class="user" action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
+                  
                   <div class="row">
                     <div class="col-md-4 form-group">
-                      <label>Price Set</label>
+                      <label>Product<span class="require">*</span></label>
+                    </div>
+                    <div class="col-md-8 form-group">
+                              <select name="product" class="form-control">
+                              <option value="">Select</option>
+                    <?php
+                      $select_product_query = mysql_query("SELECT * FROM products")or die(mysql_error());
+                      if(mysql_num_rows($select_product_query) > 0){
+                        $j = 0;
+                        while($row1 = mysql_fetch_array($select_product_query)){
+                          ?>
+                             <option value="<?php echo $row1['product']; ?>"><?php echo $row1['product']; ?></option>
+                          <?php
+                          $j++;
+                        }
+                      }
+                    ?>
+                    
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 form-group">
+                      <label>Price Set<span class="require">*</span></label>
                     </div>
                     <div class="col-md-8 form-group">
                       <input type="text" class="form-control" name="price" placeholder="Rs" required>
                     </div>
                   </div>
-                  <div class="row">
-                    <div class="col-md-4 form-group">
-                      <label>Category</label>
-                    </div>
-                    <div class="col-md-8 form-group">
-                      <select name="category" class="form-control">
-                      <option value="">--Select--</option>
-                      <option value="skin_less">Skin Less</option>
-                      <option value="with_skin">With Skin</option>
-                      <option value="live_bird">Live Bird</option>
-                      <option value="bone_less">Bone Less</option>
-                      <option value="liver">Liver</option>
-                      <option value="country_bird">Country Bird</option>
-                      </select>
-                    </div>
-                  </div>
-                  
                   
                   <div class="col-md-12 form-group center">
                    <input type="submit" class="btn btn-primary" value="Price Set" name="submit" />
-                    <br>
-                    <label for="msg"class="red"><?php echo $msg; ?></label>
+                  
                   </div> 
                     
                   </form>
@@ -209,8 +216,8 @@ if(isset($_POST["submit"])){
                   <div class="chart-pie">
                     <div class="row">
                       <div class="col-md-4" style="color:#ef1c08;font-weight:bold;">DATE</div>
+                      <div class="col-md-4" style="color:#ef1c08;font-weight:bold;">PRODUCT</div>
                       <div class="col-md-4" style="color:#ef1c08;font-weight:bold;">PRICE</div>
-                      <div class="col-md-4" style="color:#ef1c08;font-weight:bold;">Category</div>
                     </div>
                     <?php
                       $all_price_query = mysql_query("SELECT * FROM price_set") or die(mysqli_error());
@@ -221,8 +228,8 @@ if(isset($_POST["submit"])){
                           ?>
                           <div class="row">
                             <div class="col-md-4"><?php echo $row['date']; ?></div>
+                            <div class="col-md-4"><?php echo $row['product']; ?></div>
                             <div class="col-md-4">Rs. <?php echo $row['price']; ?></div>
-                            <div class="col-md-4"><?php echo $row['category']; ?></div>
                             
                           </div>
                           <?php
@@ -230,19 +237,19 @@ if(isset($_POST["submit"])){
                         }
                       }
                       else{
-                          echo "No branches added !!";
+                          echo "No prices added !!";
                       }
                     ?>
                   </div>
                   <div class="mt-4 text-center small">
                     <span class="mr-2">
-                      <i class="fas fa-circle text-primary"></i> Direct
+                      <!-- <i class="fas fa-circle text-primary"></i> Direct -->
                     </span>
                     <span class="mr-2">
-                      <i class="fas fa-circle text-success"></i> Social
+                      <!-- <i class="fas fa-circle text-success"></i> Social -->
                     </span>
                     <span class="mr-2">
-                      <i class="fas fa-circle text-info"></i> Referral
+                      <!-- <i class="fas fa-circle text-info"></i> Referral -->
                     </span>
                   </div>
                 </div>
@@ -297,12 +304,12 @@ if(isset($_POST["submit"])){
   <!-- Custom scripts for all pages-->
   <script src="js/sb-admin-2.min.js"></script>
 
-  <!-- Page level plugins -->
+  <!-- Page level plugins --
   <script src="vendor/chart.js/Chart.min.js"></script>
 
-  <!-- Page level custom scripts -->
+  <!-- Page level custom scripts --
   <script src="js/demo/chart-area-demo.js"></script>
-  <script src="js/demo/chart-pie-demo.js"></script>
+  <script src="js/demo/chart-pie-demo.js"></script>-->
 
 </body>
 

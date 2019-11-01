@@ -13,8 +13,8 @@ if(isset($_POST["submit"])){
   $bank = $_POST['bank'];
   $address = $_POST['address'];
 
-  $insert_customers_query = mysql_query("INSERT INTO customer (name,mobile,email,gst,address,bank_details,status)
-                                    values('".$name."','".$mobile."','$email','".$gst."','".$bank."','".$address."','Active')") or die(mysqli_error());
+  $insert_customers_query = mysql_query("INSERT INTO customer (name,mobile,email,gst,address,bank,type,status)
+                                    values('".$name."','".$mobile."','$email','".$gst."','".$address."','".$bank."','Customer','Active')") or die(mysql_error());
 
   if($insert_customers_query){
     $msg = "Successfully customer added !";
@@ -156,18 +156,18 @@ if(isset($_POST["submit"])){
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 class="m-0 font-weight-bold text-primary">Adding Customer Details</h6>
-                  
+                  <span class="red"><?php echo $msg; ?></span>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body" style="height:615px;">
                   <div class="chart-area">
                   <div class="p-12">
                   
-                    <label for="msg"class="red"><?php echo $msg; ?></label>
+                    
                   <form class="user" action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
                   <div class="row">
                     <div class="col-md-4 form-group">
-                      <label for="fullname">Full Name</label>
+                      <label for="fullname">Full Name<span class="require">*</span></label>
                     </div>
                     <div class="col-md-8 form-group">
                       <input type="text" class="form-control" name="fullname"required>
@@ -175,7 +175,7 @@ if(isset($_POST["submit"])){
                   </div>
                   <div class="row">
                     <div class="col-md-4 form-group">
-                      <label for="mobile">Mobile No</label>
+                      <label for="mobile">Mobile No<span class="require">*</span></label>
                     </div>
                     <div class="col-md-8 form-group">
                       <input type="number" class="form-control" name="mobile" required>
@@ -229,28 +229,42 @@ if(isset($_POST["submit"])){
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 class="m-0 font-weight-bold text-primary">Customer Details</h6>
+                  <span id="autosavenotify" class="red"></span>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body" style="height:615px;">
                   <div class="chart-pie">
                     <div class="row">
                     
-                      <div class="col-md-7" style="color:#ef1c08;font-weight:bold;">CUSTOMER NAME</div>
+                      <div class="col-md-6" style="color:#ef1c08;font-weight:bold;">CUSTOMER NAME</div>
                       <div class="col-md-3" style="color:#ef1c08;font-weight:bold;">MOBILE NO</div>
-                      <div class="col-md-2" style="color:#ef1c08;font-weight:bold;">STATUS</div>
+                      <div class="col-md-3" style="color:#ef1c08;font-weight:bold;">STATUS</div>
                     </div>
                     <?php
-                      $all_customers_query = mysql_query("SELECT * FROM customer") or die(mysqli_error());
+                      $all_customers_query = mysql_query("SELECT * FROM customer WHERE type = 'Customer'") or die(mysql_error());
 
                       if (mysql_num_rows($all_customers_query) > 0) {
                         $i=0;
                         while($row = mysql_fetch_array($all_customers_query)) {
                           ?>
                           <div class="row">
-                            
-                            <div class="col-md-7"><?php echo $row['name']; ?></div>
+                          <div class="myid col-md-1"><?php echo $row['id']; ?></div>
+                            <div class="col-md-5"><?php echo $row['name']; ?></div>
                             <div class="col-md-3"><?php echo $row['mobile']; ?></div>
-                            <div class="col-md-2"><?php echo $row['status']; ?></div>
+                            <div class="col-md-3">
+                                <select name="status" class="status form-control">
+                                  <option value="<?php echo $row['status']; ?>"><?php echo $row['status']; ?></option>
+                                  <?php
+                                    if ($row['status'] == 'Active'){
+                                      ?>
+                                      <option value="Inactive">Inactive</option>
+                                      <?php
+                                    }else{
+                                  ?>
+                                  <option value="Active">Active</option>
+                                    <?php } ?>
+                                </select>
+                            </div>
                           </div>
                           <?php
                           $i++;
@@ -324,13 +338,30 @@ if(isset($_POST["submit"])){
   <!-- Custom scripts for all pages-->
   <script src="js/sb-admin-2.min.js"></script>
 
-  <!-- Page level plugins -->
+  <!-- Page level plugins --
   <script src="vendor/chart.js/Chart.min.js"></script>
 
-  <!-- Page level custom scripts -->
+  <!-- Page level custom scripts --
   <script src="js/demo/chart-area-demo.js"></script>
-  <script src="js/demo/chart-pie-demo.js"></script>
+  <script src="js/demo/chart-pie-demo.js"></script>-->
+  <script>
+  $(document).ready(function(){
+    $('select.status').on('change', function () {
+      var decision = $(this).val();
+      var id = $('div.myid').html();
+      alert('Status changed to '+decision);
+      $.ajax({
+        type: "POST",
+        url: "cust-status.php",
+        data: {decision:decision, id:id},
+        success: function(msg){
+          $('#autosavenotify').text(msg);
 
+        }
+      })
+    });
+  });
+  </script>
 </body>
 
 </html>
