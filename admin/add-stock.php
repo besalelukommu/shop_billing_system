@@ -6,31 +6,18 @@ include_once("../config/config.php");
 
 if(isset($_POST["submit"])){
   
-  $main = $_POST['mainProduct'];
-  $sub = $_POST['subProduct'];
-  $stock = $_POST['stock'];
+  $category = $_POST['category'];
   $supplier = $_POST['supplier'];
-  $date = date('Y-m-d');
+  $nos = $_POST['nos'];
+  $weight = $_POST['weight'];
+  $date = date('d-m-Y');
+  $invoice = $_POST['invoice'];
+  $type = $_POST['type'];
+  $amount = $_POST['amount'];
   
-  $stock = $initial + $stock;
-
-  $insert_stock_query = mysql_query("INSERT INTO stock (main_product,sub_product,stock,supplier,date)
-                                    values('".$main."','".$sub."','".$stock."','".$supplier."','".$date."')") or die(mysql_error());
-
-  $get_stock_query = mysql_query("SELECT initial FROM total_stock WHERE main_product = '$main' AND sub_product = '$sub'") or die(mysql_error());
-  $tot1 = 0;
-  if(mysql_num_rows($get_stock_query) > 0){
-    $ii=0;
-    
-      while($row = mysql_fetch_array($get_stock_query)) {
-        $tot1 = $tot1 + $row['initial']
-        $ii++;
-      }
-      echo $tot1;
-  }
-
-  $insert_total_stock_query = mysql_query("INSERT INTO total_stock (main_product,sub_product,")
-
+  $insert_stock_query = mysql_query("INSERT INTO stock(category,supplier,no_items,weight,invoice_no,type,amount,date) 
+                                    values('".$category."','".$supplier."','".$nos."','".$weight."','".$invoice."','".$type."','".$amount."','".$date."')")or die(mysql_error());
+  
   if($insert_stock_query){
     $msg = "Successfully stock added !";
   }else{
@@ -166,12 +153,12 @@ if(isset($_POST["submit"])){
          
           <!-- Content Row -->
           <div class="row">
-          <div class="col-xl-6 col-lg-7">
+          <div class="col-xl-5 col-lg-12">
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 class="m-0 font-weight-bold text-primary">Add Stock Details</h6>
-                  
+                  <span class="red"><?php echo $msg; ?></span>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
@@ -180,22 +167,22 @@ if(isset($_POST["submit"])){
                   <form class="user" action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
                   <div class="row">
                     <div class="col-md-4 form-group">
-                      <label>Main Product Name</label>
+                      <label>Category<span class="require">*</span></label>
                     </div>
                     <div class="col-md-8 form-group">
                       <?php
-                        $all_main_product_query = mysql_query("SELECT main_product FROM products") or die(mysql_error());
+                        $all_categories_query = mysql_query("SELECT * FROM categories") or die(mysql_error());
 
-                        if(mysql_num_rows($all_main_product_query) > 0){
+                        if(mysql_num_rows($all_categories_query) > 0){
                           
                             ?>
-                            <select name="mainProduct" class="form-control" required>
-                              <option value="">--Select--</option>
+                            <select name="category" class="form-control" required>
+                              <option value="">Select</option>
                               <?php
                               $j = 0;
-                              while($row = mysql_fetch_array($all_main_product_query)){
+                              while($row = mysql_fetch_array($all_categories_query)){
                               ?>
-                              <option value="<?php echo $row['main_product']; ?>"><?php echo $row['main_product']; ?></option>
+                              <option value="<?php echo $row['category_name']; ?>"><?php echo $row['category_name']; ?></option>
                                <?php
                                 $j++;
                               }
@@ -205,46 +192,20 @@ if(isset($_POST["submit"])){
                             
                     </div>
                   </div>
+                  
                   <div class="row">
                     <div class="col-md-4 form-group">
-                      <label>Sub Product Name</label>
+                      <label>Supplier<span class="require">*</span></label>
                     </div>
                     <div class="col-md-8 form-group">
                       <?php
-                        $all_sub_product_query = mysql_query("SELECT sub_product FROM products") or die(mysql_error());
-
-                        if(mysql_num_rows($all_sub_product_query) > 0){
-                          
-                            ?>
-                            <select name="subProduct" class="form-control" required>
-                              <option value="">--Select--</option>
-                              <?php
-                              $k = 0;
-                              while($row = mysql_fetch_array($all_sub_product_query)){
-                              ?>
-                              <option value="<?php echo $row['sub_product']; ?>"><?php echo $row['sub_product']; ?></option>
-                               <?php
-                                $k++;
-                              }
-                            }
-                                ?>
-                            </select>
-                            
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4 form-group">
-                      <label>Supplier</label>
-                    </div>
-                    <div class="col-md-8 form-group">
-                      <?php
-                        $all_supplier_query = mysql_query("SELECT * FROM suppliers") or die(mysql_error());
+                        $all_supplier_query = mysql_query("SELECT * FROM customer WHERE type = 'Supplier'") or die(mysql_error());
 
                         if(mysql_num_rows($all_supplier_query) > 0){
                           
                             ?>
                             <select name="supplier" class="form-control" required>
-                              <option value="">--Select--</option>
+                              <option value="">Select</option>
                               <?php
                               $k = 0;
                               while($row = mysql_fetch_array($all_supplier_query)){
@@ -261,17 +222,50 @@ if(isset($_POST["submit"])){
                   </div>
                   <div class="row">
                     <div class="col-md-4 form-group">
-                      <label>Stock Details</label>
+                      <label class="font-weight-bold text-primary">Stock Details</label>
                     </div>
-                    <div class="col-md-8 form-group">
-                      <input type="text" class="form-control" name="stock" required>
+                    <div class="col-md-4 form-group">
+                      <label>Invoice No</label>
+                    </div>
+                    <div class="col-md-4 form-group">
+                      <input type="text" class="form-control" name="invoice">
                     </div>
                   </div>
-                  
+                  <div class="row">
+                  <div class="col-md-3 form-group">
+                      <label for="nos">Stock in Nos<span class="require">*</span></label>
+                    </div>
+                    <div class="col-md-3 form-group">
+                      <input type="text" class="form-control" name="nos" required>
+                    </div>
+                    <div class="col-md-2 form-group">
+                      <label for="weight">Weight</label>
+                    </div>
+                    <div class="col-md-4 form-group">
+                      <input type="text" class="form-control" name="weight" placeholder="K.G's">
+                    </div>
+                  </div>
+                  <div class="row">
+                  <div class="col-md-3 form-group">
+                      <label for="nos">Type<span class="require">*</span></label>
+                    </div>
+                    <div class="col-md-3 form-group">
+                      <select name="type" class="form-control">
+                        <option value="">Select</option>
+                        <option value="cash">Cash</option>
+                        <option value="credit">Credit</option>
+                      </select>
+                    </div>
+                    <div class="col-md-2 form-group">
+                      <label for="weight">Amount<span class="require">*</span></label>
+                    </div>
+                    <div class="col-md-4 form-group">
+                      <input type="text" class="form-control" name="amount" placeholder="Rs" required>
+                    </div>
+                  </div>
                   <div class="col-md-12 form-group center">
                    <input type="submit" class="btn btn-primary" value="Add Stock" name="submit" />
-                    <br>
-                    <label for="msg"class="red"><?php echo $msg; ?></label>
+                    
                   </div> 
                     
                   </form>
@@ -280,7 +274,7 @@ if(isset($_POST["submit"])){
                 </div>
               </div>
             </div>
-            <div class="col-xl-6 col-lg-5">
+            <div class="col-xl-7 col-lg-12">
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -291,10 +285,11 @@ if(isset($_POST["submit"])){
                   <div class="chart-pie">
                     <div class="row">
                     
-                      <div class="col-md-4" style="color:#ef1c08;font-weight:bold;">MAIN PRODUCT</div>
-                      <div class="col-md-3" style="color:#ef1c08;font-weight:bold;">SUB PRODUCT</div>
-                      <div class="col-md-2" style="color:#ef1c08;font-weight:bold;">STOCK</div>
-                      <div class="col-md-3" style="color:#ef1c08;font-weight:bold;">DATE</div>
+                      <div class="col-md-3" style="color:#ef1c08;font-weight:bold;">CATEGORY</div>
+                      <div class="col-md-3" style="color:#ef1c08;font-weight:bold;">SUPPLIER</div>
+                      <div class="col-md-2" style="color:#ef1c08;font-weight:bold;">NOs</div>
+                      <div class="col-md-2" style="color:#ef1c08;font-weight:bold;">WEIGHT</div>
+                      <div class="col-md-2" style="color:#ef1c08;font-weight:bold;">DATE</div>
                     </div>
                     <?php
                       $all_stock_query = mysql_query("SELECT * FROM stock") or die(mysqli_error());
@@ -305,10 +300,11 @@ if(isset($_POST["submit"])){
                           ?>
                           <div class="row">
                             
-                            <div class="col-md-4"><?php echo $row['main_product']; ?></div>
-                            <div class="col-md-3"><?php echo $row['sub_product']; ?></div>
-                            <div class="col-md-2"><?php echo $row['stock']; ?></div>
-                            <div class="col-md-3"><?php echo $row['date']; ?></div>
+                            <div class="col-md-3"><?php echo $row['category']; ?></div>
+                            <div class="col-md-3"><?php echo $row['supplier']; ?></div>
+                            <div class="col-md-2"><?php echo $row['no_items']; ?></div>
+                            <div class="col-md-2"><?php echo $row['weight']; ?></div>
+                            <div class="col-md-2"><?php echo $row['date']; ?></div>
                           </div>
                           <?php
                           $i++;
@@ -321,13 +317,13 @@ if(isset($_POST["submit"])){
                   </div>
                   <div class="mt-4 text-center small">
                     <span class="mr-2">
-                      <i class="fas fa-circle text-primary"></i> Direct
+                      <!-- <i class="fas fa-circle text-primary"></i> Direct -->
                     </span>
                     <span class="mr-2">
-                      <i class="fas fa-circle text-success"></i> Social
+                      <!-- <i class="fas fa-circle text-success"></i> Social -->
                     </span>
                     <span class="mr-2">
-                      <i class="fas fa-circle text-info"></i> Referral
+                      <!-- <i class="fas fa-circle text-info"></i> Referral -->
                     </span>
                   </div>
                 </div>
