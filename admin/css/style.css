@@ -10,6 +10,12 @@
   color:#ef1c08a6;
   font-weight: bold;
 }
+.role {
+    font-size: .8rem;
+    border-radius: 10rem;
+    padding: 1.5rem 1rem;
+    width: 344px;
+}
 .sw {
     padding-top:5px;
 }
