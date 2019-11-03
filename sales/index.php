@@ -5,6 +5,10 @@ session_start();
 if(!isset($_SESSION["username"])) $_SESSION["username"]="";
 if($_SESSION["username"]!="")
 {
+ // header("Location:index.php?login=0");
+//}
+//else
+//{
  require_once('../config/config.php'); 
 	
 ?>
@@ -23,11 +27,11 @@ if($_SESSION["username"]!="")
   <title>Shop Billing System - Dashboard</title>
 
   <!-- Custom fonts for this template-->
-  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="../admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
   <!-- Custom styles for this template-->
-  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+  <link href="../admin/css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
 
@@ -37,7 +41,7 @@ if($_SESSION["username"]!="")
   <div id="wrapper">
 
     <?php
-      include_once "include/sidebar.php";
+      //include_once "include/sidebar.php";
     ?>
     <!-- End of Sidebar -->
 
@@ -92,7 +96,7 @@ if($_SESSION["username"]!="")
 
             
 
-            <?php include_once 'include/username.php'; ?>
+            <?php include_once '/include/username.php'; ?>
 
           </ul>
 
@@ -111,7 +115,7 @@ if($_SESSION["username"]!="")
           <!-- Content Row -->
           <div class="row">
 
-            <!-- Earnings (Monthly) Card Example --
+            <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
@@ -128,7 +132,7 @@ if($_SESSION["username"]!="")
               </div>
             </div>
 
-            <!-- Earnings (Monthly) Card Example --
+            <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
@@ -145,7 +149,7 @@ if($_SESSION["username"]!="")
               </div>
             </div>
 
-            <!-- Earnings (Monthly) Card Example --
+            <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
@@ -171,7 +175,7 @@ if($_SESSION["username"]!="")
               </div>
             </div>
 
-            <!-- Pending Requests Card Example --
+            <!-- Pending Requests Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-warning shadow h-100 py-2">
                 <div class="card-body">
@@ -189,7 +193,7 @@ if($_SESSION["username"]!="")
             </div>
           </div>
 
-          <!-- Content Row --
+          <!-- Content Row -->
 
           <div class="row">
 
@@ -411,21 +415,16 @@ if($_SESSION["username"]!="")
   <?php include_once 'include/logout.php'; ?>
 
   <!-- Bootstrap core JavaScript-->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../admin/vendor/jquery/jquery.min.js"></script>
+  <script src="../admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <!-- Core plugin JavaScript-->
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="../admin/vendor/jquery-easing/jquery.easing.min.js"></script>
 
   <!-- Custom scripts for all pages-->
-  <script src="js/sb-admin-2.min.js"></script>
+  <script src="../admin/js/sb-admin-2.min.js"></script>
 
-  <!-- Page level plugins -->
-  <script src="vendor/chart.js/Chart.min.js"></script>
-
-  <!-- Page level custom scripts -->
-  <script src="js/demo/chart-area-demo.js"></script>
-  <script src="js/demo/chart-pie-demo.js"></script>
+  
 
 </body>
 

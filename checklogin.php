@@ -23,6 +23,7 @@ if($role=='admin')
 		if($count==1)
 		{                   
 			$_SESSION['username']=$username;
+			
 			echo "<script>
 			window.location='admin/index.php';
 			</script>";
@@ -45,7 +46,7 @@ if($role=='admin')
 if($count==1)
 		{
 		   	
-			$_SESSION['adminname']=$username;
+			$_SESSION['username']=$username;
 			echo "<script>
 			window.location='sales/index.php';
 			</script>";
